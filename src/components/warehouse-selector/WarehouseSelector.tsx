@@ -5,7 +5,6 @@ import { CheckboxOption } from './CheckboxOption';
 import { CustomMenuList } from './CustomMenuList';
 import { CustomMultiValue, MultiValueRemove, MultiValueContainer } from './MultiValueComponents';
 import { SelectOption, GroupedOption } from '../../types/warehouse';
-import { ChevronDown, ChevronUp } from 'lucide-react';
 
 const customComponents = {
   IndicatorSeparator: () => null,
@@ -61,7 +60,6 @@ const customComponents = {
       </div>
     );
   },
-  
 };
 
 export const WarehouseSelector = () => {
@@ -69,12 +67,8 @@ export const WarehouseSelector = () => {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [groupedOptions] = useState<GroupedOption[]>(getGroupedTags());
 
-  const handleChange = (selectedOptions: any) => {
-    if (selectedOptions === null || selectedOptions.length === 0) {
-      setSelectedTags([]);
-    } else {
-      setSelectedTags(selectedOptions);
-    }
+  const handleChange = (selectedOptions: SelectOption[] | null) => {
+    setSelectedTags(selectedOptions || []);
   };
 
   const filteredOptions = (candidate: any, input: string) => {
