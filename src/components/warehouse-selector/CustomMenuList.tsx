@@ -42,7 +42,7 @@ export const CustomMenuList = (props: CustomMenuListProps) => {
   return (
     <components.MenuList {...props}>
       <div className="relative">
-        <div className="max-h-[300px] overflow-y-auto">
+        <div className="mx-2">
           {props.children}
         </div>
         <SelectAllOption selectProps={props.selectProps} allOptions={allOptions} />

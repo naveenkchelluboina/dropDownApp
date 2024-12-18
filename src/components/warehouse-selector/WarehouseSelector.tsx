@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import Select, { components, GroupBase } from 'react-select';
+import Select, { GroupBase } from 'react-select';
 import { getGroupedTags } from '../../data/warehouseTags';
 import { CheckboxOption } from './CheckboxOption';
 import { CustomMenuList } from './CustomMenuList';
 import { CustomMultiValue, MultiValueRemove, MultiValueContainer } from './MultiValueComponents';
 import { SelectOption, GroupedOption } from '../../types/warehouse';
+import { customStyles } from './styles';
 
 const customComponents = {
   IndicatorSeparator: () => null,
+  ClearIndicator: () => null,
   Group: (props: any) => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen] = useState(true);
     const allOptionsInGroup = props.children?.map((child: any) => child.props.data);
     const allSelected = allOptionsInGroup?.every((option: SelectOption) => 
       props.selectProps.value?.some((selected: SelectOption) => selected.value === option.value)
@@ -95,6 +97,7 @@ export const WarehouseSelector = () => {
         onChange={handleChange}
         filterOption={filteredOptions}
         options={groupedOptions}
+        styles={customStyles}
         placeholder="Search or select tags"
         menuShouldScrollIntoView={false}
         onMenuOpen={() => setMenuIsOpen(true)}
