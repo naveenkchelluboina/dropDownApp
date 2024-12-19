@@ -7,29 +7,50 @@ interface CustomMenuListProps extends MenuListProps<SelectOption> {
   options: any[];
 }
 
-const SelectAllOption = ({ selectProps, allOptions }: any) => {
-  const allSelected = selectProps.value?.length === allOptions.length;
+const SelectAllOption = ({ selectProps, filteredOptions }: any) => {
+  const allSelected =
+    filteredOptions.length > 0 &&
+    filteredOptions.every((option: SelectOption) =>
+      selectProps.value.some(
+        (selected: SelectOption) => selected.value === option.value
+      )
+    );
 
   const handleSelectAll = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const newSelected = allSelected ? [] : allOptions;
+    const newSelected = allSelected
+      ? selectProps.value.filter(
+          (selected: SelectOption) =>
+            !filteredOptions.some(
+              (option: SelectOption) => option.value === selected.value
+            )
+        )
+      : [
+          ...selectProps.value,
+          ...filteredOptions.filter(
+            (option: SelectOption) =>
+              !selectProps.value.some(
+                (selected: SelectOption) => selected.value === option.value
+              )
+          ),
+        ];
+
     selectProps.onChange(newSelected, {
       action: allSelected ? 'clear' : 'select-option',
-      option: allOptions
+      option: filteredOptions,
     });
   };
 
   return (
-    <div 
+    <div
       className="sticky bottom-0 border-t border-gray-100 bg-white cursor-pointer hover:bg-gray-50"
       onClick={handleSelectAll}
     >
       <div className="w-full px-4 py-2">
         <span className="text-sm text-blue-600 font-medium">
-          {allSelected 
-            ? `Unselect All (${allOptions.length} selected)`
-            : 'Select all'
-          }
+          {allSelected
+            ? `Unselect All (${filteredOptions.length} selected)`
+            : `Select All `}
         </span>
       </div>
     </div>
@@ -37,15 +58,25 @@ const SelectAllOption = ({ selectProps, allOptions }: any) => {
 };
 
 export const CustomMenuList = (props: CustomMenuListProps) => {
-  const allOptions = props.options.flatMap((group) => group.options);
-  
+  // Filter options based on the current search input
+  const filteredOptions = props.options
+    .flatMap((group) => group.options)
+    .filter((option) =>
+      option.label
+        .toLowerCase()
+        .includes(props.selectProps.inputValue.toLowerCase())
+    );
+
   return (
     <components.MenuList {...props}>
       <div className="relative">
-        <div className="mx-2">
-          {props.children}
-        </div>
-        <SelectAllOption selectProps={props.selectProps} allOptions={allOptions} />
+        <div className="mx-2">{props.children}</div>
+        {filteredOptions.length > 0 && (
+          <SelectAllOption
+            selectProps={props.selectProps}
+            filteredOptions={filteredOptions}
+          />
+        )}
       </div>
     </components.MenuList>
   );

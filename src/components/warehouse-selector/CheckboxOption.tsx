@@ -1,12 +1,5 @@
-import React from 'react';
 import { components } from 'react-select';
-import { SelectOption } from '../../types/warehouse';
 
-interface CheckboxOptionProps {
-  children: React.ReactNode;
-  isSelected: boolean;
-  data: SelectOption;
-}
 
 export const CheckboxOption = ({ children, ...props }: any) => {
   const { label } = props.data;
